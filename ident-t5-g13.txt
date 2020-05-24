@@ -1,0 +1,7 @@
+Turma 5, Grupo 13
+
+Rita Silva - up201806527
+Raquel Sepúlveda - up201806664
+
+- Todas as funcionalidades foram implementadas;
+- As imagens apresentam texturas aplicadas diferentes em alguns objetos do que no projeto final uma vez que foram tiradas aquando o desenvolvimento da cena.
