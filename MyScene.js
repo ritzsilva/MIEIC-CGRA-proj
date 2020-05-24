@@ -28,33 +28,34 @@ class MyScene extends CGFscene {
         //Initialize scene objects
         this.axis = new CGFaxis(this);
         this.sphere = new MySphere(this, 16, 8);
-        this.cylinder = new MyCylinder(this,10, 10);
+        this.cylinder = new MyCylinder(this,30, 10);
         this.cube = new MyCubeMap(this);
-        this.vehicle= new MyVehicle(this,16,8);
-        this.terrain= new MyTerrain(this);
-        this.billboard= new MyBillboard(this);
+        this.vehicle = new MyVehicle(this,16,8);
+        this.terrain = new MyTerrain(this);
+        this.billboard = new MyBillboard(this);
 
         //supplies
-        this.supply1= new MySupply(this);
-        this.supply2= new MySupply(this);
-        this.supply3= new MySupply(this);
-        this.supply4= new MySupply(this);
-        this.supply5= new MySupply(this);
-        this.supplies=[this.supply1,this.supply2, this.supply3, this.supply4,this.supply5];
+        this.supply1 = new MySupply(this);
+        this.supply2 = new MySupply(this);
+        this.supply3 = new MySupply(this);
+        this.supply4 = new MySupply(this);
+        this.supply5 = new MySupply(this);
+        this.supplies = [this.supply1,this.supply2, this.supply3, this.supply4,this.supply5];
         this.lastUpdate = 0;
-        this.nSuppliesDelivered=0;
+        this.nSuppliesDelivered = 0;
 
         //Objects connected to MyInterface
         this.displayAxis = false;
         this.displayNormals = false;
         this.displayCylinder = false;
         this.sphereDisplay = false;
-        this.displayVehicle=true;
+        this.displayVehicle = true;
         this.displayTerrain = true;
-        this.displayBillboard=true;
+        this.displayBillboard = true;
+        this.displayCube = true;
         this.selectedTexture = 0;
-        this.speedFactor=0.5;
-        this.scaleFactor=1;
+        this.speedFactor = 0.5;
+        this.scaleFactor = 1;
 
         //earth
         this.earthMaterial = new CGFappearance(this);
@@ -66,7 +67,6 @@ class MyScene extends CGFscene {
         this.earthMaterial.setTexture(this.texture);
         this.earthMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
-        //this.textures = [this.rightMaterial, this.rightMaterial1];
         this.textureIds = {'Garden': 0, 'Desert': 1};
         
     }
@@ -202,9 +202,19 @@ class MyScene extends CGFscene {
         // Apply transformations corresponding to the camera position relative to the origin
         this.applyViewMatrix();
        
-        this.pushMatrix();
-        this.cube.display();
-        this.popMatrix();
+        if(this.displayCylinder){
+            this.pushMatrix();
+            this.translate(0,5,0);
+            this.scale(this.scaleFactor,this.scaleFactor,this.scaleFactor);
+            this.cylinder.display();
+            this.popMatrix();
+        }
+
+        if(this.displayCube){
+            this.pushMatrix();
+            this.cube.display();
+            this.popMatrix();
+        }
         if(this.displayTerrain){
             this.pushMatrix();
             this.terrain.display();
@@ -215,9 +225,7 @@ class MyScene extends CGFscene {
         if (this.displayAxis)
             this.axis.display();
 
-        if (this.displayCylinder)
-            this.cylinder.display();
-
+       
         this.setDefaultAppearance();
     
         
@@ -225,13 +233,18 @@ class MyScene extends CGFscene {
 
         //This sphere does not have defined texture coordinates
         if (this.sphereDisplay){
+            this.pushMatrix();
+            this.scale(this.scaleFactor,this.scaleFactor,this.scaleFactor);
             this.earthMaterial.apply();
             this.sphere.display();
+            this.popMatrix();
         }
         
         if(this.displayVehicle){
             this.pushMatrix();
+            this.translate(this.vehicle.x, this.vehicle.y, this.vehicle.z);
             this.scale(this.scaleFactor,this.scaleFactor,this.scaleFactor);
+            this.translate(-this.vehicle.x, -this.vehicle.y, -this.vehicle.z);
             this.vehicle.display();
             this.popMatrix();
         }
@@ -253,6 +266,8 @@ class MyScene extends CGFscene {
             this.billboard.display();
             this.popMatrix();
         }
+
+        
         
         // ---- END Primitive drawing section
         this.setActiveShader(this.defaultShader);
